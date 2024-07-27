@@ -14,6 +14,11 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res, next) => {
   try {
+    console.log(process.env.PASSWORD);
+    if (req.get("X-PASSWORD") !== process.env.PASSWORD) {
+      res.status(401);
+      throw new Error("UnAuthorized");
+    }
     const logEntry = new LogEntry(req.body);
     const createdEntry = await logEntry.save();
     res.json(createdEntry);
